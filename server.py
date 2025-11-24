@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template_string, redirect, url_for
+from flask import Flask, request, render_template_string
+from flask_lambda import FlaskLambda
 
-app = Flask(__name__)
+app = FlaskLambda(__name__)
 
-# Credenciais 
+# Credenciais
 VALID_USERNAME = "admin"
 VALID_PASSWORD = "vespascon{L1ttl3_fUn_0s1nT}"
 
@@ -13,7 +14,6 @@ LOGIN_HTML = """
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
     <style>
       body { 
         font-family: Arial, sans-serif; 
@@ -59,7 +59,7 @@ LOGIN_HTML = """
         flex-direction: column;
         width: 100%;
         max-width: 400px; 
-        margin-top: 90px; /* evita sobreposição com o header */
+        margin-top: 90px; 
       }
 
       h2 { 
@@ -97,20 +97,16 @@ LOGIN_HTML = """
         color:green; 
       }
     </style>
-
   </head>
 
   <body>
-
     <header>
       <a href="https://instagram.com" target="_blank">
         <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png">
       </a>
-
       <a href="https://twitter.com" target="_blank">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png">
       </a>
-
       <a href="https://linkedin.com" target="_blank">
         <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png">
       </a>
@@ -122,10 +118,8 @@ LOGIN_HTML = """
       <form method="post" action="{{ url_for('login') }}">
         <label>Usuário</label>
         <input type="text" name="username" placeholder="usuário" required autofocus value="admin" autocomplete="off">
-        <!--Não esquecer do usuário "admin"!! -->
         <label>Senha</label>
         <input type="text" name="password" placeholder="senha" required>
-
         <button type="submit">Login</button>
       </form>
 
@@ -152,3 +146,7 @@ def login():
     else:
         msg = "Senha incorreta. Tente novamente."
         return render_template_string(LOGIN_HTML, message=msg, success=False)
+
+# A função lambda que será executada no Netlify
+def lambda_handler(event, context):
+    return app(event, context)
