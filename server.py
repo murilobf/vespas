@@ -152,6 +152,3 @@ def login():
     else:
         msg = "Senha incorreta. Tente novamente."
         return render_template_string(LOGIN_HTML, message=msg, success=False)
-
-if __name__ == "__main__":
-    app.run(host="127.1.0.0", port=5000, debug=True)
